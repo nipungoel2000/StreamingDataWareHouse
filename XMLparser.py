@@ -1,8 +1,6 @@
 # Reference : https://docs.python.org/3/library/xml.etree.elementtree.html
 import xml.etree.ElementTree as ET
 
-from matplotlib.pyplot import table
-
 class XMLParser:
     def __init__(self,fName):
         self.fName = fName
