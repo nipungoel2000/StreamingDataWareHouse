@@ -34,10 +34,15 @@ class XMLParser:
                     lst.append(column.find('name').text)
         return lst
 
+    def getAggregates(self):
+        return list(map(lambda agg: agg.text, self.root.find('aggregates').findall('agg')))
+
+
 if __name__=="__main__":
     myparser = XMLParser("config_v2.xml")
     print(myparser.getWindowparams())
     print(myparser.getEntryPoints())
     print(myparser.getPKfactTable())
+    print(myparser.getAggregates())
     # print(myparser.getWindowparams())
 
