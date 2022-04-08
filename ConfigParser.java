@@ -25,7 +25,7 @@ public class ConfigParser {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     String JDBC_URL = "jdbc:mysql://localhost/?useSSL=false";
     String username = "root";
-    String password = "root";
+    String password = "sk@7NFJz";
 
     Connection connection = null;
 
@@ -81,7 +81,7 @@ public class ConfigParser {
                         }
                     }
                     (this.tables).put(dim_name, fields);
-                    (this.table_data_loc).put(dim_name, data_loc);
+                    (this.table_data_loc).put(dim_name, "StaticData/" + data_loc);
                 }
             }
 

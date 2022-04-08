@@ -1,4 +1,5 @@
 # pip3 install watchdog
+# TO DO create threads for updating views
 import watchdog.events
 import watchdog.observers
 import time
@@ -7,29 +8,24 @@ import XMLparser
 from queue import Queue
 import mysql.connector as mysql
 from mysql.connector import Error
-
+from ViewHandler import ViewHandler
 
 class ETL:
-    def __init__(self):
+    def __init__(self, db_details):
         self.configFname = "config_v2.xml"
         self.parser = XMLparser.XMLParser(self.configFname)
-        self.conn, self.cursor = self.connectToDb()
+        self.conn, self.cursor = self.connectToDb(db_details)
         self.insertionQ=Queue()
         self.deletionQ=Queue()
         self.tick=0
         self.windowParams=self.parser.getWindowparams()
         self.wsize= int(self.windowParams["window_size"])
         self.wvel=int(self.windowParams["window_velocity"])
-
-    def connectToDb(self):
+        self.viewHandler = ViewHandler(self.configFname, db_details)
+    def connectToDb(self, db_details):
         # configure your database credentials here or we can even send them as paramters in the function
-        host = 'localhost'
-        database = 'stdwh_db'
-        user = 'root'
-        password = 'root'
         try:
-            conn = mysql.connect(user=user, password=password,
-                                 host=host, database=database)
+            conn = mysql.connect(**db_details)
             if conn.is_connected():
                 cursor = conn.cursor()
         except Error as e:
@@ -102,7 +98,8 @@ class ETL:
                         (self.deletionQ).put(temp_path)
                         lst_toinsert_paths.append(temp_path)
                     self.load(self.extract(lst_toinsert_paths))
-                    # ping aravind function to update/create views
+                    print("Executing update views")
+                    self.viewHandler.updateViews(self.tick)
                     self.tick=self.tick+1
             else:
                 self.insertionQ.put(path)
@@ -117,6 +114,8 @@ class ETL:
                         lst_todel_paths.append(tmp_deletion_path)
                     self.delete(self.extract(lst_todel_paths),self.parser.getPKfactTable())
                     self.load(self.extract(lst_toinsert_paths))
+                    print("Executing update views")
+                    self.viewHandler.updateViews(self.tick)
                     # call aravind function to create/update views
                     self.tick=self.tick+1
         # lines = self.extract(paths)
@@ -125,7 +124,13 @@ class ETL:
 
 class Handler(watchdog.events.PatternMatchingEventHandler):
     def __init__(self):
-        self.etl = ETL()
+        self.etl = ETL({
+            "host": "localhost",
+            "user": "root",
+            "passwd": "sk@7NFJz",
+            "database": "stdwh_db",
+            "charset": 'utf8',
+    })
         # Set the patterns for PatternMatchingEventHandler
         watchdog.events.PatternMatchingEventHandler.__init__(self, patterns=['*.csv'],
                                                              ignore_directories=True, case_sensitive=False)
