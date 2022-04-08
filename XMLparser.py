@@ -1,6 +1,8 @@
 # Reference : https://docs.python.org/3/library/xml.etree.elementtree.html
 import xml.etree.ElementTree as ET
 
+from matplotlib.pyplot import table
+
 class XMLParser:
     def __init__(self,fName):
         self.fName = fName
@@ -24,10 +26,20 @@ class XMLParser:
                     lst.append(field.find('name').text)
             dict[tableName] = lst
         return dict
+    
+    def getPKfactTable(self):
+        lst=[]
+        for dim in self.root.iter('variables'):
+            tableName=dim.get('name')
+            for column in dim.findall('column'):
+                if column.get('is-pk')=="true":
+                    lst.append(column.find('name').text)
+        return lst
 
 if __name__=="__main__":
     myparser = XMLParser("config_v2.xml")
     print(myparser.getWindowparams())
     print(myparser.getEntryPoints())
+    print(myparser.getPKfactTable())
     # print(myparser.getWindowparams())
 

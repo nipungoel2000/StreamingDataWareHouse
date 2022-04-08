@@ -4,6 +4,7 @@ import watchdog.observers
 import time
 import csv
 import XMLparser
+from queue import Queue
 import mysql.connector as mysql
 from mysql.connector import Error
 
@@ -13,6 +14,12 @@ class ETL:
         self.configFname = "config_v2.xml"
         self.parser = XMLparser.XMLParser(self.configFname)
         self.conn, self.cursor = self.connectToDb()
+        self.insertionQ=Queue(maxsize=0)
+        self.deletionQ=Queue(maxsize=0)
+        self.tick=0
+        self.windowParams=self.parser.getWindowparams()
+        self.wsize=self.windowParams["window_size"]
+        self.wvel=self.windowParams["window_velocity"]
 
     def connectToDb(self):
         # configure your database credentials here or we can even send them as paramters in the function
@@ -61,10 +68,53 @@ class ETL:
             except Error as e:
                 print("Error while inserting to the database", e)
 
+    def delete(self,lines,pk):
+        print("In delete")
+        for line in lines:
+            for index, item in enumerate(pk):
+                sql = "DELETE FROM factTable WHERE "
+                sql += item
+                sql += "="
+                sql += line[index]
+            print(sql)
+            try:
+                (self.cursor).execute(sql)
+                print("Record deleted")
+                (self.conn).commit()
+            except Error as e:
+                print("Error while deleting from the database", e)
+
     def process(self, paths):
         print("In process")
-        lines = self.extract(paths)
-        self.load(lines)
+        for path in paths:
+            if self.tick==0:
+                self.insertionQ.put(path)
+                if self.insertionQ.qsize()==self.wsize:
+                    lst_toinsert_paths = []
+                    while self.insertionQ.qempty()==False:
+                        temp_path = self.insertionQ.get()
+                        (self.deletionQ).put(temp_path)
+                        lst_toinsert_paths.append(temp_path)
+                    self.load(self.extract(lst_toinsert_paths))
+                    # ping aravind function to update/create views
+                    tick=tick+1
+            else:
+                self.insertionQ.put(path)
+                if self.insertionQ.qsize()==self.wvel:
+                    lst_toinsert_paths = []
+                    lst_todel_paths = []
+                    while self.insertionQ.qempty==False:
+                        tmp_deletion_path = self.deletionQ.get()
+                        tmp_insertion_path = self.insertionQ.get()
+                        self.deletionQ.put(tmp_insertion_path)
+                        lst_toinsert_paths.append(tmp_insertion_path)
+                        lst_todel_paths.append(tmp_deletion_path)
+                    self.delete(self.extract(lst_todel_paths),self.parser.getPKfactTable())
+                    self.load(self.extract(lst_toinsert_paths))
+                    # call aravind function to create/update views
+                    tick=tick+1
+        # lines = self.extract(paths)
+        # self.load(lines)
 
 
 class Handler(watchdog.events.PatternMatchingEventHandler):
