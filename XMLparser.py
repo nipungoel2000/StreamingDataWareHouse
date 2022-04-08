@@ -25,7 +25,6 @@ class XMLParser:
             dict[tableName] = lst
         return dict
 
-        return 
 if __name__=="__main__":
     myparser = XMLParser("config_v2.xml")
     print(myparser.getWindowparams())
