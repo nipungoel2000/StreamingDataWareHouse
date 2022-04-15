@@ -148,7 +148,7 @@ if __name__ == "__main__":
     src_path = r"fact_data_emitter/"
     event_handler = Handler()
     observer = watchdog.observers.Observer()
-    observer.schedule(event_handler, path=src_path, recursive=True)
+    observer.schedule(event_handler, path=src_path, recursive=False)
     observer.start()
     try:
         while True:
