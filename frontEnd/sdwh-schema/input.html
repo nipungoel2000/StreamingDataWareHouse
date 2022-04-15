@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <script src="./main.js"></script>
+    <h1> SDWH Schema Input Form </h1>
+    <form id="schema_form">
+        <div id="dimensions">
+            <h3>Dimensions</h3>
+            <input type="button" onclick="addDimensionTable()" value="Add dimension"></input>
+        </div>
+        
+        <div id="ft_columns">
+            <h3>Fact Table Columns</h3>
+            <input type="button" onclick="addFTColumn()" value="Add fact table column"></input>
+        </div>
+
+        <div id="emitter_loc">
+            <h3>Stream Data Source</h3>
+            <label for="emitter_source">Emitter source location/link</label>
+            <input type="text" id="emitter_source" name="emitter_source"></input> <!-- TO DO folder dropdown if flat file -->
+        </div>
+
+        <div id="aggregates">
+            <h3>Aggregate Functions</h3>
+            
+            <input type="checkbox" id="sum" ></input>
+            <label for="sum">Sum</label>
+
+            <input type="checkbox" id="count" ></input>
+            <label for="count">Count</label>
+
+            <input type="checkbox" id="average" ></input>
+            <label for="average">Average</label>
+
+        </div>
+
+        <div id="window_config">
+            <label for="wsize">Window size</label>
+            <input type="number" id="wsize"/>
+
+            <label for="wvelocity">Window velocity</label>
+            <input type="number" id="wvelocity"/>
+        </div>
+
+        <input type="submit" value="Submit" onclick="toXML()">
+        <input type="button" onclick="redirect('dashboard.html')" value="Go to Dashboard" />
+    </form>
+</body>
+</html>
