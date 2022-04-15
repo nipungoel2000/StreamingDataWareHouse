@@ -10,18 +10,20 @@ import mysql.connector as mysql
 from mysql.connector import Error
 from ViewHandler import ViewHandler
 
+
 class ETL:
     def __init__(self, db_details):
         self.configFname = "config_v2.xml"
         self.parser = XMLparser.XMLParser(self.configFname)
         self.conn, self.cursor = self.connectToDb(db_details)
-        self.insertionQ=Queue()
-        self.deletionQ=Queue()
-        self.tick=0
-        self.windowParams=self.parser.getWindowparams()
-        self.wsize= int(self.windowParams["window_size"])
-        self.wvel=int(self.windowParams["window_velocity"])
+        self.insertionQ = Queue()
+        self.deletionQ = Queue()
+        self.tick = 0
+        self.windowParams = self.parser.getWindowparams()
+        self.wsize = int(self.windowParams["window_size"])
+        self.wvel = int(self.windowParams["window_velocity"])
         self.viewHandler = ViewHandler(self.configFname, db_details)
+
     def connectToDb(self, db_details):
         # configure your database credentials here or we can even send them as paramters in the function
         try:
@@ -84,40 +86,42 @@ class ETL:
 
     def process(self, paths):
         print("In process")
+        print(paths)
         for path in paths:
-            if self.tick==0:
+            if self.tick == 0:
                 self.insertionQ.put(path)
                 print("path : " + path)
                 print(self.wsize)
                 print(self.insertionQ.qsize())
-                if (self.insertionQ.qsize()==self.wsize):
+                if (self.insertionQ.qsize() == self.wsize):
                     print("here")
                     lst_toinsert_paths = []
-                    while self.insertionQ.empty()==False:
+                    while self.insertionQ.empty() == False:
                         temp_path = self.insertionQ.get()
                         (self.deletionQ).put(temp_path)
                         lst_toinsert_paths.append(temp_path)
                     self.load(self.extract(lst_toinsert_paths))
                     print("Executing update views")
                     self.viewHandler.updateViews(self.tick)
-                    self.tick=self.tick+1
+                    self.tick = self.tick+1
             else:
                 self.insertionQ.put(path)
-                if self.insertionQ.qsize()==self.wvel:
+                if self.insertionQ.qsize() == self.wvel:
                     lst_toinsert_paths = []
                     lst_todel_paths = []
-                    while self.insertionQ.empty()==False:
+                    while self.insertionQ.empty() == False:
                         tmp_deletion_path = self.deletionQ.get()
                         tmp_insertion_path = self.insertionQ.get()
                         self.deletionQ.put(tmp_insertion_path)
                         lst_toinsert_paths.append(tmp_insertion_path)
                         lst_todel_paths.append(tmp_deletion_path)
-                    self.delete(self.extract(lst_todel_paths),self.parser.getPKfactTable())
+                    self.delete(self.extract(lst_todel_paths),
+                                self.parser.getPKfactTable())
                     self.load(self.extract(lst_toinsert_paths))
                     print("Executing update views")
                     self.viewHandler.updateViews(self.tick)
                     # call aravind function to create/update views
-                    self.tick=self.tick+1
+                    self.tick = self.tick+1
         # lines = self.extract(paths)
         # self.load(lines)
 
@@ -127,10 +131,10 @@ class Handler(watchdog.events.PatternMatchingEventHandler):
         self.etl = ETL({
             "host": "localhost",
             "user": "root",
-            "passwd": "sk@7NFJz",
+            "passwd": "root",
             "database": "stdwh_db",
             "charset": 'utf8',
-    })
+        })
         # Set the patterns for PatternMatchingEventHandler
         watchdog.events.PatternMatchingEventHandler.__init__(self, patterns=['*.csv'],
                                                              ignore_directories=True, case_sensitive=False)

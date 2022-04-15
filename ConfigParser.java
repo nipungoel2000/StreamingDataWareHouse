@@ -25,7 +25,7 @@ public class ConfigParser {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     String JDBC_URL = "jdbc:mysql://localhost/?useSSL=false";
     String username = "root";
-    String password = "sk@7NFJz";
+    String password = "root";
 
     Connection connection = null;
 
