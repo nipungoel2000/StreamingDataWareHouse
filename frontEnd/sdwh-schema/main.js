@@ -281,7 +281,6 @@ const toXML = () => {
     })
     xmldata.push("</aggregates>")
 
-
     // Window Config
     xmldata.push("<window-config>")
     xmldata.push('<window-size>' + $("#wsize").val() + '</window-size>')
@@ -293,7 +292,7 @@ const toXML = () => {
     xmldata.push("</sdwh-schema>");
 
     let xmldoc = xmldata.join("\n")
-    downloadString(xmldoc, "text/xml", "config");
+    downloadString(xmldoc, "text/xml", "config_v2");
 }
 
 function downloadString(text, fileType, fileName) {
@@ -315,27 +314,33 @@ function redirect(htmlPage) {
 }
 
 function startEngine() {
-    //TO DO : call the start stream api
+    fetch('http://localhost:9001/execute')
+
+        // Converting received data to JSON
+        .then(response => response.json())
+        .then(json => {
+            console.log(json);
+        });
     redirect("queryDisplay.html");
 }
 
-function checkboxes() {
+async function checkboxes() {
     console.log("Checkboxes api was called");
     var tickNumber;
-    fetch('http://localhost:9001/getTick') //TO FILL API URL HERE
+    await fetch('http://localhost:9001/getTick') //TO FILL API URL HERE
         // Converting received data to JSON
         .then(response => response.json())
         .then(json => {
             tickNumber = json.tickNum;
         });
-    tickNumber = 10;
-    fetch('http://localhost:9001/ep') //TO FILL API URL HERE
+    console.log(tickNumber);
+    fetch('http://localhost:9001/getEntryPoints') //TO FILL API URL HERE
         .then(response => response.json())
         .then(json => {
             console.log(json);
             let li = ``;
             // Loop through each data and add a checkbox
-            json.forEach(dim => {
+            json.EntryPoints.forEach(dim => {
                 li += `<input type="checkbox" class="entryPoint" id=${dim} name=${dim}><label for=${dim}>${dim}</label>`;
             });
             li += `<br><input type="number" id="tick" name="tick" min="0" max=${tickNumber}><label for=tick>Select Tick Number</label>`
