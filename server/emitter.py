@@ -2,7 +2,7 @@ import time
 import random
 import csv
 
-SLEEP_TIME = 1
+SLEEP_TIME = 0.1
 EMITTER_LOC = "fact_data_emitter/"
 
 

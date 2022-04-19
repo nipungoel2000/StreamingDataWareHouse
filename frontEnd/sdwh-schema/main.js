@@ -377,6 +377,25 @@ function queryApi() {
         // Displaying results to console
         .then(json => {
             console.log(json); //this is the result sent by the api. need to figure out how to display this in frontend
+            const results = json.result;
+            // const n_rows = results.length;
+            const columns = Object.keys(results[0]);
+            // const n_columns = columns.length;
+            let li = "<tr>";
+            columns.forEach(col => {
+                li += `<th>${col}</th>`
+            })
+            li += "</tr>";
+            results.forEach(row => {
+                li += "<tr>";
+                columns.forEach(column => {
+                    li += `<td>${row[column]}</td>`
+                })
+                li += "</tr>";
+            });
+
+            // Display result
+            document.getElementById("results").innerHTML = li;
         });
     // console.log(body);
 }
