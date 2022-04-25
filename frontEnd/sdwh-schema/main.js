@@ -250,7 +250,7 @@ const toXML = () => {
 
 
     // Fact table columns
-    xmldata.push("<columns>");
+    xmldata.push("<variables>");
     $('#ft_columns .column').each((i1, el1) => {
         let column = $(el1);
 
@@ -264,7 +264,7 @@ const toXML = () => {
         xmldata.push('</column>');
 
     })
-    xmldata.push("</columns>");
+    xmldata.push("</variables>");
 
 
     // Emitter
@@ -285,7 +285,7 @@ const toXML = () => {
     xmldata.push("<window-config>")
     xmldata.push('<window-size>' + $("#wsize").val() + '</window-size>')
     xmldata.push('<window-velocity>' + $("#wvelocity").val() + '</window-velocity>')
-    // xmldata.push('<window-units>' + $("#wunits").val() + '</window-units>')
+    xmldata.push('<window-units>' + $("#wunits").val() + '</window-units>')
     xmldata.push("</window-config>")
 
 

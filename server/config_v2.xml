@@ -1,69 +1,69 @@
 <?xml version="1.0"?>
 <sdwh-schema>
-	<dimensions>
-		<dim name="dimStore">
-			<field is-pk="true" is-EntryPoint="false">
-				<name>storeId</name>
-				<type>int</type>
-			</field>
-			<field is-pk="false" is-EntryPoint="true">
-				<name>storeName</name>
-				<type>string</type>
-			</field>
-			<field is-pk="false" is-EntryPoint="false">
-				<name>storeLocation</name>
-				<type>string</type>
-			</field>
-			<field is-pk="false" is-EntryPoint="true">
-				<name>storeCity</name>
-				<type>string</type>
-			</field>
-			<field is-pk="false" is-EntryPoint="true">
-				<name>storeCountry</name>
-				<type>string</type>
-			</field>
-			<data-loc>dim-store.csv</data-loc>
-		</dim>
-		<dim name="dimProduct">
-			<field is-pk="true" is-EntryPoint="false">
-				<name>productId</name>
-				<type>int</type>
-			</field>
-			<field is-pk="false" is-EntryPoint="true">
-				<name>productName</name>
-				<type>string</type>
-			</field>
-			<field is-pk="false" is-EntryPoint="true">
-				<name>productCategory</name>
-				<type>string</type>
-			</field>
-			<data-loc>dim-product.csv</data-loc>
-		</dim>
-	</dimensions>
-	<variables>
-		<column fk="dimStore.storeId" is-pk="true">
-			<name>storeId</name>
-			<type>int</type>
-		</column>
-		<column fk="dimProduct.productId" is-pk="true">
-			<name>productId</name>
-			<type>int</type>
-		</column>
-		<column fk="" is-pk="false">
-			<name>purchaseAmount</name>
-			<type>int</type>
-		</column>
-	</variables>
-	<fact-table>
-		<loc>"emitter"</loc>
-	</fact-table>
-	<aggregates>
-		<agg>sum</agg>
-		<agg>count</agg>
-	</aggregates>
-	<window-config>
-		<window-size>5</window-size>
-		<window-velocity>2</window-velocity>
-		<window-units>logical</window-units>
-	</window-config>
+<dimensions>
+<dim name="dimStore">
+<field is-pk="true" is-EntryPoint="false">
+<name>storeId</name>
+<type>int</type>
+</field>
+<field is-pk="false" is-EntryPoint="true">
+<name>storeName</name>
+<type>string</type>
+</field>
+<field is-pk="false" is-EntryPoint="false">
+<name>storeLocation</name>
+<type>string</type>
+</field>
+<field is-pk="false" is-EntryPoint="true">
+<name>storeCity</name>
+<type>string</type>
+</field>
+<field is-pk="false" is-EntryPoint="true">
+<name>storeCountry</name>
+<type>string</type>
+</field>
+<data-loc>dim-store.csv</data-loc>
+</dim>
+<dim name="dimProduct">
+<field is-pk="true" is-EntryPoint="false">
+<name>productId</name>
+<type>int</type>
+</field>
+<field is-pk="false" is-EntryPoint="true">
+<name>productName</name>
+<type>string</type>
+</field>
+<field is-pk="false" is-EntryPoint="true">
+<name>productCategory</name>
+<type>string</type>
+</field>
+<data-loc>dim-product.csv</data-loc>
+</dim>
+</dimensions>
+<variables>
+<column fk="dimStore.storeId">
+<name>storeId</name>
+<type>int</type>
+</column>
+<column fk="dimProduct.productId">
+<name>productId</name>
+<type>int</type>
+</column>
+<column fk="">
+<name>purchaseAmount</name>
+<type>int</type>
+</column>
+</variables>
+<fact-table>
+<loc>"fact_data_emitter"</loc>
+</fact-table>
+<aggregates>
+<agg>sum</agg>
+<agg>count</agg>
+</aggregates>
+<window-config>
+<window-size>5</window-size>
+<window-velocity>2</window-velocity>
+<window-units>logical</window-units>
+</window-config>
 </sdwh-schema>
