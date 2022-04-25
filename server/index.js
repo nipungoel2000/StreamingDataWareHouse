@@ -31,15 +31,15 @@ function getEntryPoints(XMLfname)
                 if(is_ep == "\"true\"")
                 {   
                     var col_name = JSON.stringify(dims[i]["field"][j]['name'][0]);
-                    console.log(col_name.substring(1,col_name.length-1));
-                    entryPoints.push(col_name.substring(1,col_name.length-1))
+                    console.log("dim_" + dims[i]['$']['name'] + "_" + col_name.substring(1,col_name.length-1));
+                    entryPoints.push("dim_" + dims[i]['$']['name'] + "_" + col_name.substring(1,col_name.length-1))
                     // console.log("OK");
                 }
             }
         }
         // return entryPoints;
         })
-        return entryPoints;
+        return entryPoints.sort();
 };
 
 var entryPoints = getEntryPoints("config_v2.xml");

@@ -342,7 +342,7 @@ async function checkboxes() {
             let li = ``;
             // Loop through each data and add a checkbox
             json.EntryPoints.forEach(dim => {
-                li += `<input type="checkbox" class="entryPoint" id=${dim} name=${dim}><label for=${dim}>${dim}</label>`;
+                li += `<input type="checkbox" class="entryPoint" id=${dim} name=${dim}><label for=${dim}>${dim.split("_")[2]}</label>`;
             });
             li += `<br><input type="number" id="tick" name="tick" min="0" max=${tickNumber}><label for=tick>Select Tick Number</label>`
             // TO DO add input selector for window tick number 
@@ -363,6 +363,7 @@ function queryApi() {
     }
     var chooseTick = document.getElementById('tick');
     const body = { dimensions: content, tickNumber: chooseTick.value }
+    console.log(body)
     fetch("http://localhost:9001/query", {
         method: "POST",
         // Adding body or contents to send
@@ -388,7 +389,7 @@ function queryApi() {
                 const columns = Object.keys(results[0]);
                 li = "<tr>";
                 columns.forEach(col => {
-                    li += `<th>${col}</th>`
+                    li += `<th>${col.startsWith("dim") ? col.split("_")[2] : col}</th>`
                 })
                 li += "</tr>";
                 results.forEach(row => {
