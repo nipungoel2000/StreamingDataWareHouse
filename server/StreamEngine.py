@@ -9,7 +9,7 @@ from queue import Queue
 import mysql.connector as mysql
 from mysql.connector import Error
 from ViewHandler import ViewHandler
-
+from pathlib import Path
 
 class ETL:
     def __init__(self, db_details):
@@ -156,3 +156,19 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
+    # curcount = 1
+    # etl = ETL({
+    #         "host": "localhost",
+    #         "user": "root",
+    #         "passwd": "root",
+    #         "database": "stdwh_db",
+    #         "charset": 'utf8',
+    #     })
+    # while(True):
+    #     fname = str(curcount) + ".csv"
+    #     path_to_file = src_path+fname
+    #     path = Path(path_to_file)
+    #     if path.is_file():
+    #         print(path)
+    #         etl.process([str(path)])
+    #         curcount = curcount + 1
