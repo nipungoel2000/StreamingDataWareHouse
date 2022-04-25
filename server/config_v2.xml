@@ -59,12 +59,11 @@
 </fact-table>
 <aggregates>
 <agg>sum</agg>
-<agg>min</agg>
-<agg>max</agg>
+<agg>count</agg>
 </aggregates>
 <window-config>
-<window-size>5</window-size>
-<window-velocity>2</window-velocity>
+<window-size>4</window-size>
+<window-velocity>3</window-velocity>
 <window-units>logical</window-units>
 </window-config>
 </sdwh-schema>

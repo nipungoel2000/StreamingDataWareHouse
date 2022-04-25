@@ -2,7 +2,7 @@ import time
 import random
 import csv
 
-SLEEP_TIME = 5
+SLEEP_TIME = 2
 EMITTER_LOC = "fact_data_emitter/"
 
 
@@ -10,11 +10,11 @@ def emitter():
     cnt = 1
     lst = []
     while True:
-        storeId = random.randint(1, 4)
-        productId = random.randint(1, 5)
+        storeId = random.randint(1, 8)
+        productId = random.randint(1, 10)
         while((storeId, productId) in lst):
-            storeId = random.randint(1, 4)
-            productId = random.randint(1, 5)
+            storeId = random.randint(1, 8)
+            productId = random.randint(1, 10)
         lst.append((storeId, productId))
         purchaseAmount = random.randint(1, 5000)
         data = [storeId, productId, purchaseAmount]
