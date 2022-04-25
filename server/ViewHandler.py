@@ -58,7 +58,7 @@ class ViewHandler():
         self.cursor.execute("show columns from factTable")
         factTableColumns = self.cursor.fetchall()
         # Assuming all the dimension fks are also pks
-        return [list(filter(lambda x: x[3] == 'PRI', factTableColumns)), list(filter(lambda x: x[3] != 'PRI', factTableColumns))]
+        return [list(filter(lambda x: x[3] == 'MUL', factTableColumns)), list(filter(lambda x: x[3] != 'MUL', factTableColumns))]
 
     # Identify entrypoint element given a bitcode
     def decodeEntryPoints(self, entryPoints, bitcode):
