@@ -19,7 +19,7 @@
 <type>string</type>
 </field>
 <field is-pk="false" is-EntryPoint="true">
-<name>storeCountry</name>
+<name>storeState</name>
 <type>string</type>
 </field>
 <data-loc>dim-store.csv</data-loc>
@@ -59,7 +59,8 @@
 </fact-table>
 <aggregates>
 <agg>sum</agg>
-<agg>count</agg>
+<agg>min</agg>
+<agg>max</agg>
 </aggregates>
 <window-config>
 <window-size>5</window-size>

@@ -313,7 +313,7 @@ function redirect(htmlPage) {
     window.location.href = htmlPage;
 }
 
-function startEngine() {
+async function startEngine() {
     fetch('http://localhost:9001/execute')
 
         // Converting received data to JSON
@@ -321,6 +321,7 @@ function startEngine() {
         .then(json => {
             console.log(json);
         });
+    await sleep(8 * 1000);
     redirect("queryDisplay.html");
 }
 
@@ -378,24 +379,32 @@ function queryApi() {
         .then(json => {
             console.log(json); //this is the result sent by the api. need to figure out how to display this in frontend
             const results = json.result;
-            // const n_rows = results.length;
-            const columns = Object.keys(results[0]);
-            // const n_columns = columns.length;
-            let li = "<tr>";
-            columns.forEach(col => {
-                li += `<th>${col}</th>`
-            })
-            li += "</tr>";
-            results.forEach(row => {
-                li += "<tr>";
-                columns.forEach(column => {
-                    li += `<td>${row[column]}</td>`
+            // console.log(results)
+            let li = " "
+            if (results.length === 0) {
+                li = "<h4>No results to display</h4>"
+            }
+            else {
+                const columns = Object.keys(results[0]);
+                li = "<tr>";
+                columns.forEach(col => {
+                    li += `<th>${col}</th>`
                 })
                 li += "</tr>";
-            });
-
+                results.forEach(row => {
+                    li += "<tr>";
+                    columns.forEach(column => {
+                        li += `<td>${row[column]}</td>`
+                    })
+                    li += "</tr>";
+                });
+            }
             // Display result
             document.getElementById("results").innerHTML = li;
         });
     // console.log(body);
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
